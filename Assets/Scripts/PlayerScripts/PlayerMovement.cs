@@ -78,6 +78,15 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void ResetMovementState()
+    {
+        direction.x = 0;
+        direction.y = 0;
+        rb.linearVelocity = Vector3.zero;
+        isSprintingHold = false;
+        playerCrouch.HandleCrouchReleased();
+    }
+
     private void HandleSprint()
     {
         isSprintingHold = !isSprintingHold;

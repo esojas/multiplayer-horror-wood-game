@@ -32,8 +32,8 @@ public class PlayerCam : MonoBehaviour
         SetCameraTarget(playerGameObject);
 
         // TEMPORARY
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
 
         //GameEventsManager.Instance.onChangeCameraTarget += SetCameraTarget;
         //GameEventsManager.Instance.onRestartLevel += OnRestartLevel;

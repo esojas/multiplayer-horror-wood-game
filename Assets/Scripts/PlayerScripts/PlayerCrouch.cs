@@ -55,7 +55,7 @@ public class PlayerCrouch : MonoBehaviour
         }
     }
 
-    private void HandleCrouchReleased()
+    public void HandleCrouchReleased()
     {
         IsCrouching = false;
         IsSliding = false;

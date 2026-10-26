@@ -11,7 +11,7 @@ public class ScaleFromMicrophone : MonoBehaviour
     [Header("Sensitivity (higher = more sensitive)")]
     public float minSensibility = 5f;
     public float maxSensibility = 100f;
-    public float currentLoudnessSensibility = 30f;
+    [SerializeField] private float currentLoudnessSensibility = 30f;
 
     [Header("Tuning")]
     [Tooltip("Raw mic loudness below this counts as silence")]
@@ -37,9 +37,9 @@ public class ScaleFromMicrophone : MonoBehaviour
 
         float target = Mathf.Clamp01(raw * currentLoudnessSensibility);
 
-        displayed = Mathf.Lerp(displayed, target, 1f - Mathf.Exp(-smoothing * Time.deltaTime));
+        displayed = Mathf.Lerp(displayed, target, 1f - Mathf.Exp(-smoothing * Time.unscaledDeltaTime));
 
-        if(displayed > .75f)
+        if (displayed > .75f)
             loudnessDetectedText.SetActive(true);
         else loudnessDetectedText.SetActive(false);
 

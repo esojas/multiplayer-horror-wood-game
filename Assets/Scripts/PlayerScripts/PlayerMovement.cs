@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     bool isSprintingHold;
     Vector2 direction;
-
+    private float currentTargetFOV = -1f;
     private void Awake()
     {
         playerControls = GetComponent<PlayerControls>();
@@ -134,14 +134,12 @@ public class PlayerMovement : MonoBehaviour
     private void HandleCameraFOV()
     {
         bool canSprint = staminaAmount > 0.01f && isSprintingHold;
-        if (canSprint)
-        {
-            playerCam.DoFOV(75f);
-        }
-        else
-        {
-            playerCam.DoFOV(65f);
-        }
+        float targetFOV = canSprint ? 75f : 65f;
+
+        if (Mathf.Approximately(targetFOV, currentTargetFOV)) return;
+
+        currentTargetFOV = targetFOV;
+        playerCam.DoFOV(targetFOV);
     }
 
     private void UpdateStaminaUI()

@@ -3,10 +3,11 @@ using UnityEngine.UI;
 
 public class ScaleFromMicrophone : MonoBehaviour
 {
-    public Image audioBar;
+    public Image audioOptionBar;
     public Slider sensitivitySlider;
     public AudioLoudnessDetection detector;
     public GameObject loudnessDetectedText;
+    public GameObject loudnessInGameDetectedText;
 
     [Header("Sensitivity (higher = more sensitive)")]
     public float minSensibility = 5f;
@@ -19,7 +20,7 @@ public class ScaleFromMicrophone : MonoBehaviour
     [Tooltip("Higher = bar reacts faster")]
     public float smoothing = 12f;
 
-    float displayed;
+    public static float displayed { get; private set; }
 
     void Start()
     {
@@ -40,10 +41,17 @@ public class ScaleFromMicrophone : MonoBehaviour
         displayed = Mathf.Lerp(displayed, target, 1f - Mathf.Exp(-smoothing * Time.unscaledDeltaTime));
 
         if (displayed > .75f)
+        {
             loudnessDetectedText.SetActive(true);
-        else loudnessDetectedText.SetActive(false);
-
-        audioBar.fillAmount = displayed;
+            loudnessInGameDetectedText.SetActive(true);
+        }
+        else
+        {
+            loudnessDetectedText.SetActive(false);
+            loudnessInGameDetectedText.SetActive(false);
+        }
+        audioOptionBar.fillAmount = displayed;
+        
     }
 
     public void SetLoudnessSensibility(float t)

@@ -9,6 +9,8 @@ public class MonsterAIScript : MonoBehaviour
     public Transform player;
 
     [SerializeField] private int walkingSpeed = 5;
+    [SerializeField] private float walkPointTimeout = 5f;
+    private float walkPointTimer;
     [SerializeField] private int runningSpeed = 10;
 
     public LayerMask whatIsGround, whatIsPlayer;
@@ -16,7 +18,7 @@ public class MonsterAIScript : MonoBehaviour
     private Transform noisePos; // Position where player made noise
 
     //Patrolling
-    public Vector3 walkPoint;
+    private Vector3 walkPoint;
     bool walkPointSet;
     public float walkPointRange;
 
@@ -57,6 +59,7 @@ public class MonsterAIScript : MonoBehaviour
         
         agent.speed = playerInSightRange ?  runningSpeed: walkingSpeed;
         IsChasing = playerInSightRange;
+        
         if (!playerInSightRange && !playerInAttackRange) Patroling();
         if (playerInSightRange &&  !playerInAttackRange) Chasing();
         if (playerInSightRange && playerInAttackRange) Attacking();
@@ -70,11 +73,13 @@ public class MonsterAIScript : MonoBehaviour
         if (walkPointSet)
         {
             agent.SetDestination(walkPoint);
+            walkPointTimer += Time.deltaTime;
         }
 
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
+        bool timedOut = walkPointTimer >= walkPointTimeout;
 
-        if (distanceToWalkPoint.magnitude < 1f) // Reach Destination
+        if (distanceToWalkPoint.magnitude < 1f || timedOut) // Reach Destination
         {
             walkPointSet = false; // Find a new place to walk
         }
@@ -82,9 +87,10 @@ public class MonsterAIScript : MonoBehaviour
 
     private void WalkToNoise()
     {
+
         noisePos = player.transform;
         walkPoint = noisePos.position;
-
+        walkPointTimer = 0f;
         if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
         {
             walkPointSet = true;
@@ -95,7 +101,7 @@ public class MonsterAIScript : MonoBehaviour
     {
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
-
+        walkPointTimer = 0f;
         walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
 
